@@ -1,10 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
+    #region Private Fields
+
     private static T instance;
+
+    #endregion Private Fields
+
+    #region Public Properties
+
     public static T Instance
     {
         get
@@ -23,6 +28,10 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         }
     }
 
+    #endregion Public Properties
+
+    #region Protected Methods
+
     protected virtual void Awake()
     {
         if (instance == null)
@@ -35,4 +44,6 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    #endregion Protected Methods
 }

@@ -5,18 +5,68 @@ using UnityEngine.SceneManagement;
 
 public class PlayerPrefsManager : MonoBehaviour
 {
-    const string DEFAULT_MUSIC_VOLUME_KEY = "default_music_volume";
-    const string DEFAULT_SFX_VOLUME_KEY = "default_sfx_volume";
+    #region Private Fields
 
-    const string MUSIC_VOLUME_KEY = "master_volume";
-    const string SFX_VOLUME_KEY = "sfx_volume";
-    const string DIFFICULTY_KEY = "difficulty";
-    const string LEVEL_KEY = "level_unlocked_";
-    const string HIGH_SCORE_KEY = "high_score";
+    private const string DEFAULT_MUSIC_VOLUME_KEY = "default_music_volume";
+    private const string DEFAULT_SFX_VOLUME_KEY = "default_sfx_volume";
+    private const string DIFFICULTY_KEY = "difficulty";
+    private const string HIGH_SCORE_KEY = "high_score";
+    private const string LEVEL_KEY = "level_unlocked_";
+    private const string MUSIC_VOLUME_KEY = "master_volume";
+    private const string SFX_VOLUME_KEY = "sfx_volume";
+
+    #endregion Private Fields
+
+    #region Public Methods
+
+    public static float GetDefaultMusicVolume()
+    {
+        return PlayerPrefs.GetFloat(DEFAULT_MUSIC_VOLUME_KEY);
+    }
+
+    public static float GetDefaultSFXVolume()
+    {
+        return PlayerPrefs.GetFloat(DEFAULT_SFX_VOLUME_KEY);
+    }
+
+    public static float GetDifficulty()
+    {
+        return PlayerPrefs.GetFloat(DIFFICULTY_KEY);
+    }
+
+    public static int GetHighScore()
+    {
+        return PlayerPrefs.GetInt(HIGH_SCORE_KEY);
+    }
+
+    public static float GetMusicVolume()
+    {
+        return PlayerPrefs.GetFloat(MUSIC_VOLUME_KEY);
+    }
+
+    public static float GetSFXVolume()
+    {
+        return PlayerPrefs.GetFloat(SFX_VOLUME_KEY);
+    }
 
     public static bool HasKey()
     {
         return PlayerPrefs.HasKey(MUSIC_VOLUME_KEY);
+    }
+
+    public static bool IsLevelUnlocked(int level)
+    {
+        // Obtain corresponding value to the key.
+        int levelValue = PlayerPrefs.GetInt(LEVEL_KEY + level.ToString());
+        bool isLevelUnlocked = (levelValue == 1);
+
+        if (level > SceneManager.sceneCountInBuildSettings - 1)
+            return isLevelUnlocked;
+        else
+        {
+            Debug.Log("Level not in build");
+            return false;
+        }
     }
 
     public static void SetDefaultMusicVolume(float volume)
@@ -31,14 +81,20 @@ public class PlayerPrefsManager : MonoBehaviour
         PlayerPrefs.SetFloat(DEFAULT_SFX_VOLUME_KEY, volume);
     }
 
-    public static float GetDefaultMusicVolume()
+    public static void SetDifficulty(float difficulty)
     {
-        return PlayerPrefs.GetFloat(DEFAULT_MUSIC_VOLUME_KEY);
+        if (difficulty >= 1 && difficulty <= 3)
+            PlayerPrefs.SetFloat(DIFFICULTY_KEY, difficulty);
+        else
+            Debug.Log("Difficulty out of range");
     }
 
-    public static float GetDefaultSFXVolume()
+    public static void SetHighScore(int score)
     {
-        return PlayerPrefs.GetFloat(DEFAULT_SFX_VOLUME_KEY);
+        if (score >= 0)
+            PlayerPrefs.SetInt(HIGH_SCORE_KEY, score);
+        else
+            Debug.Log("Score value must be positive");
     }
 
     public static void SetMusicVolume(float volume)
@@ -53,30 +109,6 @@ public class PlayerPrefsManager : MonoBehaviour
         PlayerPrefs.SetFloat(SFX_VOLUME_KEY, volume);
     }
 
-    public static float GetMusicVolume()
-    {
-        return PlayerPrefs.GetFloat(MUSIC_VOLUME_KEY);
-    }
-
-    public static float GetSFXVolume()
-    {
-        return PlayerPrefs.GetFloat(SFX_VOLUME_KEY);
-    }
-
-    // Score
-    public static void SetHighScore(int score)
-    {
-        if (score >= 0)
-            PlayerPrefs.SetInt(HIGH_SCORE_KEY, score);
-        else
-            Debug.Log("Score value must be positive");
-    }
-
-    public static int GetHighScore()
-    {
-        return PlayerPrefs.GetInt(HIGH_SCORE_KEY);
-    }
-
     // TODO
     public static void UnlockLevel(int level)
     {
@@ -86,33 +118,5 @@ public class PlayerPrefsManager : MonoBehaviour
             Debug.Log("Level not in build");
     }
 
-    public static bool IsLevelUnlocked(int level)
-    {
-        // Obter o valor a que corresponde a chave e ficar se é 1 (unlocked)
-        int levelValue = PlayerPrefs.GetInt(LEVEL_KEY + level.ToString());
-        bool isLevelUnlocked = (levelValue == 1);
-
-        if (level > SceneManager.sceneCountInBuildSettings - 1)
-            return isLevelUnlocked;
-        else
-        {
-            Debug.Log("Level not in build");
-            return false;
-        }
-    }
-
-    public static void SetDifficulty(float difficulty)
-    {
-        if (difficulty >= 1 && difficulty <= 3)
-            PlayerPrefs.SetFloat(DIFFICULTY_KEY, difficulty);
-        else
-            Debug.Log("Difficulty out of range");
-    }
-
-    public static float GetDifficulty()
-    {
-        return PlayerPrefs.GetFloat(DIFFICULTY_KEY);
-    }
-
-
+    #endregion Public Methods
 }

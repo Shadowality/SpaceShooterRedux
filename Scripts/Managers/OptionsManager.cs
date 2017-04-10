@@ -6,18 +6,27 @@ using UnityEngine.SceneManagement;
 
 public class OptionsManager : MonoBehaviour
 {
+    #region Private Fields
 
     private static Slider musicSlider;
     private static Slider sfxSlider;
 
-    // Use this for initialization
-    void Awake()
-    {
-        musicSlider = GameObject.Find("MusicSlider").GetComponent<Slider>();
-        sfxSlider = GameObject.Find("SFXSlider").GetComponent<Slider>();
+    #endregion Private Fields
 
-        musicSlider.value = PlayerPrefsManager.GetMusicVolume();
-        sfxSlider.value = PlayerPrefsManager.GetSFXVolume();
+    #region Public Methods
+
+    public void SaveAndExit()
+    {
+        PlayerPrefsManager.SetMusicVolume(musicSlider.value);
+        PlayerPrefsManager.SetSFXVolume(sfxSlider.value);
+    }
+
+    public void SetDefaults()
+    {
+        musicSlider.value = PlayerPrefsManager.GetDefaultMusicVolume();
+        sfxSlider.value = PlayerPrefsManager.GetDefaultSFXVolume();
+        SetMusicVolume();
+        SetSFXVolume();
     }
 
     public void SetMusicVolume()
@@ -32,18 +41,18 @@ public class OptionsManager : MonoBehaviour
             AudioManager.Instance.GetSFXAudioSource("ShieldOn").Play();
     }
 
-    public void SetDefaults()
+    #endregion Public Methods
+
+    #region Private Methods
+
+    private void Awake()
     {
-        musicSlider.value = PlayerPrefsManager.GetDefaultMusicVolume();
-        sfxSlider.value = PlayerPrefsManager.GetDefaultSFXVolume();
-        SetMusicVolume();
-        SetSFXVolume();
+        musicSlider = GameObject.Find("MusicSlider").GetComponent<Slider>();
+        sfxSlider = GameObject.Find("SFXSlider").GetComponent<Slider>();
+
+        musicSlider.value = PlayerPrefsManager.GetMusicVolume();
+        sfxSlider.value = PlayerPrefsManager.GetSFXVolume();
     }
 
-    public void SaveAndExit()
-    {
-        PlayerPrefsManager.SetMusicVolume(musicSlider.value);
-        PlayerPrefsManager.SetSFXVolume(sfxSlider.value);
-    }
-
+    #endregion Private Methods
 }

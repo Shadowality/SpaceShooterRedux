@@ -6,19 +6,26 @@ using UnityEngine.SceneManagement;
 
 public class PauseManager : MonoBehaviour
 {
-    #region PUBLIC VARIABLES
-    public static PauseManager Instance;
+    #region Public Fields
+
     public Sprite pauseSprite;
     public Sprite playSprite;
-    #endregion
+    public static PauseManager Instance;
 
-    #region PRIVATE VARIABLES
+    #endregion Public Fields
+
+    #region Private Fields
+
     private static bool paused;
-    private static GameObject pausePrefab;
-    private static RectTransform[] pausePrefabAndChildren;
-    private static GameObject pausePanel;
     private static GameObject pauseButton;
+    private static GameObject pausePanel;
+    private static GameObject pausePrefab;
     private static Image pauseButtonImage;
+    private static RectTransform[] pausePrefabAndChildren;
+
+    #endregion Private Fields
+
+    #region Public Properties
 
     public static GameObject PauseButton
     {
@@ -32,43 +39,10 @@ public class PauseManager : MonoBehaviour
             pauseButton = value;
         }
     }
-    #endregion
 
-    #region METHODS
-    void Awake()
-    {
-        Instance = this;
-        pausePrefab = GameObject.Find("Pause");
-        pausePrefabAndChildren = pausePrefab.GetComponentsInChildren<RectTransform>(true);
-        pausePanel = pausePrefabAndChildren[1].gameObject;
-        PauseButton = pausePrefabAndChildren[2].gameObject;
-        pauseButtonImage = PauseButton.GetComponent<Image>();
-    }
+    #endregion Public Properties
 
-    void OnEnable()
-    {
-        //Tell our 'OnLevelFinishedLoading' function to start listening for a scene change as soon as this script is enabled.
-        SceneManager.sceneLoaded += OnLevelFinishedLoading;
-    }
-
-    void OnDisable()
-    {
-        //Tell our 'OnLevelFinishedLoading' function to stop listening for a scene change as soon as this script is disabled. Remember to always have an unsubscription for every delegate you subscribe to!
-        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
-    }
-
-    void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
-    {
-        paused = false;
-        Time.timeScale = 1;
-        AudioListener.pause = paused;
-    }
-
-    void SetPausePanel()
-    {
-        pauseButtonImage.sprite = paused ? playSprite : pauseSprite;
-        pausePanel.SetActive(paused);
-    }
+    #region Public Methods
 
     public void ChangeGameState()
     {
@@ -78,5 +52,42 @@ public class PauseManager : MonoBehaviour
         SetPausePanel();
     }
 
-    #endregion
+    #endregion Public Methods
+
+    #region Private Methods
+
+    private void Awake()
+    {
+        Instance = this;
+        pausePrefab = GameObject.Find("Pause");
+        pausePrefabAndChildren = pausePrefab.GetComponentsInChildren<RectTransform>(true);
+        pausePanel = pausePrefabAndChildren[1].gameObject;
+        PauseButton = pausePrefabAndChildren[2].gameObject;
+        pauseButtonImage = PauseButton.GetComponent<Image>();
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnLevelFinishedLoading;
+    }
+
+    private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    {
+        paused = false;
+        Time.timeScale = 1;
+        AudioListener.pause = paused;
+    }
+
+    private void SetPausePanel()
+    {
+        pauseButtonImage.sprite = paused ? playSprite : pauseSprite;
+        pausePanel.SetActive(paused);
+    }
+
+    #endregion Private Methods
 }

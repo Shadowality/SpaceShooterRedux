@@ -2,33 +2,23 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-// DONE
 public class LevelManager : Singleton<LevelManager>
 {
-    #region PUBLIC VARIABLES
+    #region Public Fields
+
     [Tooltip("Load next level in x seconds. 0 to disable.")]
     public float autoLoadNextLevel;
-    #endregion
 
-    #region PRIVATE VARIABLES
-    private int highesScore;
+    #endregion Public Fields
+
+    #region Private Fields
+
+    private int highestScore;
     private string previousScene;
-    #endregion
 
-    #region METHODS
-    protected override void Awake()
-    {
-        base.Awake();
-    }
+    #endregion Private Fields
 
-    void Start()
-    {
-        previousScene = SceneManager.GetActiveScene().name;
-        if (autoLoadNextLevel <= 0)
-            Debug.Log("Autoload disabled.");
-        else
-            Invoke("LoadNextLevel", autoLoadNextLevel);
-    }
+    #region Public Methods
 
     public void LoadLevel(string name)
     {
@@ -52,5 +42,28 @@ public class LevelManager : Singleton<LevelManager>
         Debug.Log("Quit");
         Application.Quit();
     }
-    #endregion
+
+    #endregion Public Methods
+
+    #region Protected Methods
+
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
+    #endregion Protected Methods
+
+    #region Private Methods
+
+    private void Start()
+    {
+        previousScene = SceneManager.GetActiveScene().name;
+        if (autoLoadNextLevel <= 0)
+            Debug.Log("Autoload disabled.");
+        else
+            Invoke("LoadNextLevel", autoLoadNextLevel);
+    }
+
+    #endregion Private Methods
 }
